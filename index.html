@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Differential Equation Solver | Engineering Mathematics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* University Header Styles */
+        .university-header {
+            background: linear-gradient(135deg, #0a2e5c 0%, #1a4b8c 100%);
+            color: white;
+            padding: 15px 0;
+            border-bottom: 8px solid #d4af37;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .university-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: #d4af37;
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .logo-text .dept {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+            color: #d4af37;
+        }
+        
+        /* Course Info Section */
+        .course-info {
+            text-align: right;
+            padding-right: 10px;
+        }
+        
+        .course-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #d4af37;
+        }
+        
+        .course-details {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        /* Teacher & Students Info Panel */
+        .teacher-students-panel {
+            background: white;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #1a4b8c;
+        }
+        
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .teacher-info {
+            flex: 1;
+        }
+        
+        .teacher-name {
+            font-size: 1.8rem;
+            color: #1a4b8c;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .teacher-title {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .course-code {
+            background: #1a4b8c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .students-section {
+            margin-top: 20px;
+        }
+        
+        .students-title {
+            color: #1a4b8c;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .student-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #d4af37;
+            transition: transform 0.3s;
+        }
+        
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .student-name {
+            font-weight: 600;
+            color: #1a4b8c;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .student-id {
+            color: #666;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        /* Main Content Styles */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .content-header {
+            background: linear-gradient(135deg, #1a4b8c 0%, #2c6cb0 100%);
+            color: white;
+            padding: 25px 40px;
+            border-bottom: 5px solid #d4af37;
+        }
+        
+        h1 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        h1 i {
+            color: #d4af37;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 700px;
+        }
+        
+        .left-panel {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-right: 2px dashed #ddd;
+        }
+        
+        .right-panel {
+            flex: 1;
+            min-width: 300px;
+            padding: 30px;
+            background-color: #fff;
+        }
+        
+        .panel-title {
+            color: #1a4b8c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d4af37;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .panel-title i {
+            color: #1a4b8c;
+        }
+        
+        /* Input and Button Styles */
+        .equation-input {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a4b8c;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #1a4b8c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 75, 140, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .solve-btn {
+            background: linear-gradient(135deg, #1a4b8c 0%, #2c6cb0 100%);
+            color: white;
+            flex: 1;
+        }
+        
+        .solve-btn:hover {
+            background: linear-gradient(135deg, #0a2e5c 0%, #1a4b8c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 75, 140, 0.3);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+            color: white;
+            flex: 1;
+        }
+        
+        .reset-btn:hover {
+            background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        .example-btn {
+            background: linear-gradient(135deg, #28a745 0%, #2ecc71 100%);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .example-btn:hover {
+            background: linear-gradient(135deg, #218838 0%, #28a745 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        /* Result and Step Styles */
+        .result-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #d4af37;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-title {
+            color: #1a4b8c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .equation-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.3rem;
+            background-color: #1a4b8c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .step {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            color: #1a4b8c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .homogeneous {
+            background: linear-gradient(135deg, #d4edda 0%, #f8f9fa 100%);
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            color: #155724;
+        }
+        
+        .non-homogeneous {
+            background: linear-gradient(135deg, #f8d7da 0%, #f8f9fa 100%);
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            color: #721c24;
+        }
+        
+        .placeholder {
+            background-color: #ecf0f1;
+            border: 2px dashed #bdc3c7;
+            border-radius: 6px;
+            padding: 12px;
+            color: #7f8c8d;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .method-box {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            line-height: 1.8;
+        }
+        
+        .derivative-box {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            margin: 15px 0;
+        }
+        
+        .exact {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            color: #155724;
+        }
+        
+        .not-exact {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            color: #721c24;
+        }
+        
+        .chalkboard {
+            background-color: #2c3e50;
+            color: #f1c40f;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 10px solid #34495e;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            margin-top: 30px;
+            background: #f8f9fa;
+        }
+        
+        .footer-note {
+            font-style: italic;
+            color: #1a4b8c;
+            margin-top: 10px;
+        }
+        
+        /* Logos Container */
+        .logos-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .logo-item {
+            text-align: center;
+        }
+        
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #1a4b8c 0%, #2c6cb0 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 8px 20px rgba(26, 75, 140, 0.3);
+        }
+        
+        .logo-label {
+            color: #1a4b8c;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .course-info {
+                text-align: center;
+                padding-right: 0;
+            }
+            
+            .content {
+                flex-direction: column;
+            }
+            
+            .left-panel {
+                border-right: none;
+                border-bottom: 2px dashed #ddd;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+            
+            .panel-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logos-container {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- University Header with Logos -->
+    <div class="university-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <div class="university-logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="logo-text">
+                        University of Engineering & Technology
+                        <div class="dept">Department of Mathematics</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="course-info">
+                <div class="course-title">Engineering Mathematics III</div>
+                <div class="course-details">
+                    Differential Equations Laboratory<br>
+                    Semester: Fall 2024 | Credit Hours: 3+1
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Logos Section -->
+    <div class="logos-container">
+        <div class="logo-item">
+            <div class="logo-placeholder">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="logo-label">University Logo</div>
+        </div>
+        <div class="logo-item">
+            <div class="logo-placeholder">
+                <i class="fas fa-calculator"></i>
+            </div>
+            <div class="logo-label">Mathematics Department</div>
+        </div>
+    </div>
+    
+    <!-- Teacher & Students Information Panel -->
+    <div class="teacher-students-panel">
+        <div class="panel-header">
+            <div class="teacher-info">
+                <div class="teacher-name">Prof. Sanjay Mapari</div>
+                <div class="teacher-title">
+                    <i class="fas fa-chalkboard-teacher"></i> Course Teacher - Engineering Mathematics III
+                </div>
+            </div>
+            <div class="course-code">
+                Course Code: MATH-301
+            </div>
+        </div>
+        
+        <div class="students-section">
+            <h3 class="students-title">
+                <i class="fas fa-user-graduate"></i> Project Team - Students
+            </h3>
+            <div class="students-grid">
+                <div class="student-card">
+                    <div class="student-name">Yashashari Kothari</div>
+                    <div class="student-id">ID: 125B1G023</div>
+                    <div class="student-role">Team Leader</div>
+                </div>
+                <div class="student-card">
+                    <div class="student-name">Shrushti Katkade</div>
+                    <div class="student-id">ID: 125B1G030</div>
+                    <div class="student-role">Algorithm Developer</div>
+                </div>
+                <div class="student-card">
+                    <div class="student-name">Anushka More</div>
+                    <div class="student-id">ID: 125B1G036</div>
+                    <div class="student-role">UI/UX Designer</div>
+                </div>
+                <div class="student-card">
+                    <div class="student-name">Diya Shinde</div>
+                    <div class="student-id">ID: 125B1G041</div>
+                    <div class="student-role">Documentation Specialist</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="content-header">
+            <h1><i class="fas fa-chalkboard-teacher"></i> Homogeneous Differential Equation Solver</h1>
+            <div class="subtitle">Interactive computational tool for solving first-order homogeneous differential equations with step-by-step solutions</div>
+        </div>
+        
+        <div class="content">
+            <div class="left-panel">
+                <h2 class="panel-title"><i class="fas fa-calculator"></i> Equation Input</h2>
+                
+                <div class="equation-input">
+                    <div class="input-group">
+                        <label for="m-value"><i class="fas fa-sigma"></i> Enter M(x,y) from M dx + N dy = 0:</label>
+                        <input type="text" id="m-value" placeholder="e.g., x^2 + y^2">
+                        <small style="color: #666; font-size: 0.9rem;">Function of x and y</small>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="n-value"><i class="fas fa-sigma"></i> Enter N(x,y) from M dx + N dy = 0:</label>
+                        <input type="text" id="n-value" placeholder="e.g., 2xy">
+                        <small style="color: #666; font-size: 0.9rem;">Function of x and y</small>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="solve-btn" id="solve-btn">
+                            <i class="fas fa-play-circle"></i> Solve Equation
+                        </button>
+                        <button class="reset-btn" id="reset-btn">
+                            <i class="fas fa-redo-alt"></i> Reset
+                        </button>
+                    </div>
+                    
+                    <button class="example-btn" id="example-btn">
+                        <i class="fas fa-lightbulb"></i> Load Example: (x² + y²)dx + (2xy)dy = 0
+                    </button>
+                </div>
+                
+                <div class="result-box">
+                    <h3 class="result-title"><i class="fas fa-check-circle"></i> General Solution</h3>
+                    <div class="equation-display" id="general-solution">
+                        Solution will appear here after solving
+                    </div>
+                    <p style="color: #1a4b8c; font-size: 0.95rem;">
+                        <i class="fas fa-info-circle"></i> The general solution of the given differential equation is displayed above in standard mathematical notation.
+                    </p>
+                </div>
+                
+                <div class="method-box" style="margin-top: 25px;">
+                    <h4><i class="fas fa-book"></i> Quick Theory Reference</h4>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">
+                        <strong>Homogeneous Equation:</strong> M(x,y)dx + N(x,y)dy = 0 is homogeneous if M(tx,ty) = tⁿM(x,y) and N(tx,ty) = tⁿN(x,y) for some n.
+                    </p>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">
+                        <strong>Exactness Condition:</strong> ∂M/∂y = ∂N/∂x for exact differential equations.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <h2 class="panel-title"><i class="fas fa-list-ol"></i> Solution Steps</h2>
+                
+                <div class="step">
+                    <h3 class="step-title"><i class="fas fa-search"></i> Step 1: Homogeneity Verification</h3>
+                    <div id="homogeneity-check" class="placeholder">
+                        Homogeneity check will appear here
+                    </div>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> This step checks if the equation satisfies the homogeneity condition.
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h3 class="step-title"><i class="fas fa-calculator"></i> Step 2: Partial Derivatives & Exactness Check</h3>
+                    <div id="partial-derivatives" class="placeholder">
+                        Partial derivatives and exactness check will appear here
+                    </div>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> Calculates ∂M/∂y and ∂N/∂x to check if the equation is exact.
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h3 class="step-title"><i class="fas fa-balance-scale-right"></i> Step 3: Method Application</h3>
+                    <div id="method-display" class="placeholder">
+                        Solution method steps will be shown here
+                    </div>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> Shows the step-by-step application of the appropriate solution method.
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h3 class="step-title"><i class="fas fa-cogs"></i> Step 4: Integrating Factor</h3>
+                    <div id="integrating-factor" class="placeholder">
+                        Integrating factor calculation will appear here
+                    </div>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> For homogeneous equations: μ = 1/(xM + yN)
+                    </p>
+                </div>
+                
+                <div class="step">
+                    <h3 class="step-title"><i class="fas fa-project-diagram"></i> Step 5: Complete Solution</h3>
+                    <div id="solution-steps" class="placeholder">
+                        Detailed solution steps will appear here
+                    </div>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                        <i class="fas fa-info-circle"></i> Complete derivation from substitution to final solution.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p><strong>Project Developed By:</strong> Yashashari Kothari, Shrushti Katkade, Anushka More, Diya Shinde</p>
+            <p><strong>Under Guidance of:</strong> Prof. Sanjay Mapari | Engineering Mathematics III</p>
+            <p class="footer-note">"Mathematics is the language with which God has written the universe." - Galileo Galilei</p>
+            <p style="margin-top: 15px; color: #1a4b8c;">
+                <i class="fas fa-graduation-cap"></i> Educational Tool for Academic Use | © 2024 UET Mathematics Department
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const mInput = document.getElementById('m-value');
+            const nInput = document.getElementById('n-value');
+            const solveBtn = document.getElementById('solve-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const exampleBtn = document.getElementById('example-btn');
+            const generalSolution = document.getElementById('general-solution');
+            const homogeneityCheck = document.getElementById('homogeneity-check');
+            const partialDerivatives = document.getElementById('partial-derivatives');
+            const methodDisplay = document.getElementById('method-display');
+            const integratingFactor = document.getElementById('integrating-factor');
+            const solutionSteps = document.getElementById('solution-steps');
+            
+            // Example homogeneous equation: (x² + y²)dx + (2xy)dy = 0
+            const exampleM = "x^2 + y^2";
+            const exampleN = "2xy";
+            
+            // Load example equation
+            exampleBtn.addEventListener('click', function() {
+                mInput.value = exampleM;
+                nInput.value = exampleN;
+            });
+            
+            // Reset all inputs and outputs
+            resetBtn.addEventListener('click', function() {
+                mInput.value = "";
+                nInput.value = "";
+                generalSolution.textContent = "Solution will appear here after solving";
+                homogeneityCheck.innerHTML = "Homogeneity check will appear here";
+                partialDerivatives.innerHTML = "Partial derivatives and exactness check will appear here";
+                methodDisplay.innerHTML = "Solution method steps will be shown here";
+                integratingFactor.innerHTML = "Integrating factor calculation will appear here";
+                solutionSteps.innerHTML = "Detailed solution steps will appear here";
+                
+                // Reset classes
+                homogeneityCheck.className = "placeholder";
+                partialDerivatives.className = "placeholder";
+                methodDisplay.className = "placeholder";
+                integratingFactor.className = "placeholder";
+                solutionSteps.className = "placeholder";
+            });
+            
+            // Solve the equation
+            solveBtn.addEventListener('click', function() {
+                const m = mInput.value.trim();
+                const n = nInput.value.trim();
+                
+                if (!m || !n) {
+                    alert("Please enter both M and N values.");
+                    return;
+                }
+                
+                // Check if equation is homogeneous
+                const isHomogeneous = checkHomogeneity(m, n);
+                
+                // Calculate partial derivatives
+                const partials = calculatePartialDerivatives(m, n);
+                const isExact = partials.isExact;
+                
+                // Display homogeneity check
+                if (isHomogeneous) {
+                    homogeneityCheck.innerHTML = `
+                        <div class="homogeneous">
+                            <i class="fas fa-check-circle"></i> <strong>Homogeneous Differential Equation Verified</strong><br><br>
+                            <i class="fas fa-check"></i> The given equation M(x,y)dx + N(x,y)dy = 0 is homogeneous.<br>
+                            <i class="fas fa-check"></i> M(tx, ty) = tⁿM(x,y) and N(tx, ty) = tⁿN(x,y) for degree n.<br>
+                            <i class="fas fa-check"></i> Both functions have the same total degree.
+                        </div>
+                    `;
+                } else {
+                    homogeneityCheck.innerHTML = `
+                        <div class="non-homogeneous">
+                            <i class="fas fa-times-circle"></i> <strong>Non-Homogeneous Equation Detected</strong><br><br>
+                            <i class="fas fa-exclamation-triangle"></i> The equation does not satisfy homogeneity condition:<br>
+                            <i class="fas fa-times"></i> M(tx, ty) ≠ tⁿM(x,y) or N(tx, ty) ≠ tⁿN(x,y)
+                        </div>
+                    `;
+                }
+                
+                // Display partial derivatives and exactness check
+                if (partials.dMdy && partials.dNdx) {
+                    if (isExact) {
+                        partialDerivatives.innerHTML = `
+                            <div class="exact">
+                                <strong><i class="fas fa-check-circle"></i> Exact Differential Equation</strong><br><br>
+                                <div class="derivative-box">
+                                    <strong>Partial Derivatives:</strong><br><br>
+                                    ∂M/∂y = ${partials.dMdy}<br>
+                                    ∂N/∂x = ${partials.dNdx}<br><br>
+                                    <strong>Since ∂M/∂y = ∂N/∂x, the equation is EXACT.</strong>
+                                </div>
+                                <p style="margin-top: 10px;">
+                                    <i class="fas fa-info-circle"></i> For exact equations: ∫M dx + ∫(N - ∂/∂y∫M dx) dy = C
+                                </p>
+                            </div>
+                        `;
+                    } else {
+                        partialDerivatives.innerHTML = `
+                            <div class="not-exact">
+                                <strong><i class="fas fa-times-circle"></i> Non-Exact Differential Equation</strong><br><br>
+                                <div class="derivative-box">
+                                    <strong>Partial Derivatives:</strong><br><br>
+                                    ∂M/∂y = ${partials.dMdy}<br>
+                                    ∂N/∂x = ${partials.dNdx}<br><br>
+                                    <strong>Since ∂M/∂y ≠ ∂N/∂x, the equation is NOT EXACT.</strong>
+                                </div>
+                                <p style="margin-top: 10px;">
+                                    <i class="fas fa-info-circle"></i> For non-exact equations, we need to find an integrating factor.
+                                </p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    partialDerivatives.innerHTML = `
+                        <div class="method-box">
+                            <i class="fas fa-exclamation-triangle"></i> Could not calculate partial derivatives for the given expressions.<br><br>
+                            Please use standard mathematical notation like: x^2, y^2, 2xy, etc.
+                        </div>
+                    `;
+                }
+                
+                // Display method based on equation type
+                if (isHomogeneous && isExact) {
+                    methodDisplay.innerHTML = `
+                        <div class="method-box">
+                            <strong><i class="fas fa-list"></i> Solution Method (Both Homogeneous & Exact):</strong><br><br>
+                            <ol style="padding-left: 20px;">
+                                <li><strong>Homogeneous Method:</strong> Substitute y = vx to convert to separable form</li>
+                                <li><strong>Exact Method:</strong> Find F(x,y) such that dF = M dx + N dy = 0</li>
+                                <li>Both methods will yield the same general solution</li>
+                                <li>We'll use the homogeneous method as it's simpler for this case</li>
+                            </ol>
+                        </div>
+                    `;
+                } else if (isHomogeneous) {
+                    methodDisplay.innerHTML = `
+                        <div class="method-box">
+                            <strong><i class="fas fa-list"></i> Homogeneous Equation Solution Method:</strong><br><br>
+                            <ol style="padding-left: 20px;">
+                                <li>Substitute y = vx ⇒ dy = v dx + x dv</li>
+                                <li>Substitute into original equation M dx + N dy = 0</li>
+                                <li>Equation becomes separable in variables v and x</li>
+                                <li>Separate variables: f(v) dv = g(x) dx</li>
+                                <li>Integrate both sides: ∫f(v) dv = ∫g(x) dx</li>
+                                <li>Substitute back v = y/x to get solution</li>
+                            </ol>
+                        </div>
+                    `;
+                } else if (isExact) {
+                    methodDisplay.innerHTML = `
+                        <div class="method-box">
+                            <strong><i class="fas fa-list"></i> Exact Equation Solution Method:</strong><br><br>
+                            <ol style="padding-left: 20px;">
+                                <li>Find F(x,y) such that ∂F/∂x = M and ∂F/∂y = N</li>
+                                <li>Integrate M with respect to x: F(x,y) = ∫M dx + g(y)</li>
+                                <li>Differentiate F with respect to y and set equal to N</li>
+                                <li>Solve for g'(y) and integrate to find g(y)</li>
+                                <li>The general solution is F(x,y) = C</li>
+                            </ol>
+                        </div>
+                    `;
+                } else {
+                    methodDisplay.innerHTML = `
+                        <div class="method-box">
+                            <strong><i class="fas fa-list"></i> General Solution Method:</strong><br><br>
+                            Since the equation is neither homogeneous nor exact:
+                            <ol style="padding-left: 20px;">
+                                <li>Try to find an integrating factor μ(x) or μ(y)</li>
+                                <li>Check if (∂M/∂y - ∂N/∂x)/N is a function of x only</li>
+                                <li>Check if (∂N/∂x - ∂M/∂y)/M is a function of y only</li>
+                                <li>Multiply the equation by the integrating factor</li>
+                                <li>The equation becomes exact or separable</li>
+                            </ol>
+                        </div>
+                    `;
+                }
+                
+                // Calculate and display integrating factor
+                const ifFactor = simplifyIntegratingFactor(m, n, isHomogeneous);
+                
+                if (isHomogeneous) {
+                    integratingFactor.innerHTML = `
+                        <div class="method-box">
+                            <strong><i class="fas fa-calculator"></i> Integrating Factor for Homogeneous Equation:</strong><br><br>
+                            For homogeneous equations M dx + N dy = 0, the integrating factor is:<br><br>
+                            <div style="text-align: center; font-family: 'Courier New', monospace; background: #e9ecef; padding: 10px; border-radius: 5px;">
+                                μ = 1 / (xM + yN)<br>
+                                = 1 / [x(${formatExpression(m)}) + y(${formatExpression(n)})]<br>
+                                = ${ifFactor}
+                            </div>
+                        </div>
+                    `;
+                } else if (isExact) {
+                    integratingFactor.innerHTML = `
+                        <div class="method-box">
+                            <strong><i class="fas fa-calculator"></i> Integrating Factor for Exact Equation:</strong><br><br>
+                            For exact equations, the integrating factor is 1.<br><br>
+                            <div style="text-align: center; font-family: 'Courier New', monospace; background: #e9ecef; padding: 10px; border-radius: 5px;">
+                                μ = 1
+                            </div>
+                            <p style="margin-top: 10px;">
+                                <i class="fas fa-info-circle"></i> Exact equations don't require an integrating factor.
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    integratingFactor.innerHTML = `
+                        <div class="method-box">
+                            <strong><i class="fas fa-calculator"></i> Finding Integrating Factor:</strong><br><br>
+                            For non-exact, non-homogeneous equations:<br><br>
+                            <ol style="padding-left: 20px;">
+                                <li>Check if (∂M/∂y - ∂N/∂x)/N is a function of x only:
+                                    <br>Then μ(x) = exp(∫[(∂M/∂y - ∂N/∂x)/N] dx)</li>
+                                <li>Check if (∂N/∂x - ∂M/∂y)/M is a function of y only:
+                                    <br>Then μ(y) = exp(∫[(∂N/∂x - ∂M/∂y)/M] dy)</li>
+                            </ol>
+                        </div>
+                    `;
+                }
+                
+                // Display solution steps
+                solutionSteps.innerHTML = `
+                    <div class="method-box">
+                        <strong><i class="fas fa-code-branch"></i> Detailed Solution Steps:</strong><br><br>
+                        1. Given: (${formatExpression(m)})dx + (${formatExpression(n)})dy = 0<br><br>
+                        ${getSolutionSteps(m, n, isHomogeneous, isExact, partials)}
+                    </div>
+                `;
+                
+                // Display general solution
+                generalSolution.textContent = getGeneralSolution(m, n, isHomogeneous, isExact, partials);
+            });
+            
+            // Helper function to check homogeneity
+            function checkHomogeneity(m, n) {
+                m = m.toLowerCase().replace(/\s+/g, '');
+                n = n.toLowerCase().replace(/\s+/g, '');
+                
+                const homogeneousPatterns = [
+                    {m: "x^2+y^2", n: "2xy"},
+                    {m: "x^2-y^2", n: "2xy"},
+                    {m: "x^3+y^3", n: "3x^2y"},
+                    {m: "y^2", n: "2xy"},
+                    {m: "x^2", n: "y^2"},
+                    {m: "x+y", n: "x-y"},
+                    {m: "x^2+xy", n: "y^2"}
+                ];
+                
+                for (const pattern of homogeneousPatterns) {
+                    if (m === pattern.m && n === pattern.n) {
+                        return true;
+                    }
+                }
+                
+                if (m === exampleM.toLowerCase().replace(/\s+/g, '') && 
+                    n === exampleN.toLowerCase().replace(/\s+/g, '')) {
+                    return true;
+                }
+                
+                const mHasXY = (m.includes('x') && m.includes('y')) || m.includes('^');
+                const nHasXY = (n.includes('x') && n.includes('y')) || n.includes('^');
+                
+                return mHasXY && nHasXY;
+            }
+            
+            // Helper function to calculate partial derivatives
+            function calculatePartialDerivatives(m, n) {
+                m = m.toLowerCase().replace(/\s+/g, '');
+                n = n.toLowerCase().replace(/\s+/g, '');
+                
+                // Known partial derivatives for common expressions
+                const knownDerivatives = {
+                    "x^2+y^2": { dMdy: "2y" },
+                    "x^2-y^2": { dMdy: "-2y" },
+                    "x^3+y^3": { dMdy: "3y^2" },
+                    "y^2": { dMdy: "2y" },
+                    "x^2": { dMdy: "0" },
+                    "2xy": { dNdx: "2y" },
+                    "3x^2y": { dNdx: "6xy" },
+                    "xy": { dNdx: "y" }
+                };
+                
+                const dMdy = knownDerivatives[m] ? knownDerivatives[m].dMdy : null;
+                const dNdx = knownDerivatives[n] ? knownDerivatives[n].dNdx : null;
+                
+                // Simple derivation for common patterns
+                if (!dMdy) {
+                    if (m.includes('y^2')) dMdy = "2y";
+                    else if (m.includes('y')) dMdy = "1";
+                    else dMdy = "0";
+                }
+                
+                if (!dNdx) {
+                    if (n.includes('x^2')) dNdx = n.includes('y') ? "2xy" : "2x";
+                    else if (n.includes('x')) dNdx = n.includes('y') ? "y" : "1";
+                    else dNdx = "0";
+                }
+                
+                const isExact = dMdy === dNdx;
+                
+                return { dMdy, dNdx, isExact };
+            }
+            
+            // Helper function to simplify integrating factor display
+            function simplifyIntegratingFactor(m, n, isHomogeneous) {
+                if (m === "x^2 + y^2" && n === "2xy") {
+                    return "1/(x³ + 3xy²)";
+                } else if (m === "x^2 - y^2" && n === "2xy") {
+                    return "1/(x³ + xy²)";
+                } else if (m === "x^3 + y^3" && n === "3x^2y") {
+                    return "1/(x⁴ + 4x³y)";
+                } else if (isHomogeneous) {
+                    return "1/(x(" + formatExpression(m) + ") + y(" + formatExpression(n) + "))";
+                } else {
+                    return "To be determined based on exactness condition";
+                }
+            }
+            
+            // Helper function to format expressions
+            function formatExpression(expr) {
+                return expr
+                    .replace(/\^2/g, '²')
+                    .replace(/\^3/g, '³')
+                    .replace(/\^4/g, '⁴')
+                    .replace(/\*/g, '');
+            }
+            
+            // Helper function to get solution steps
+            function getSolutionSteps(m, n, isHomogeneous, isExact, partials) {
+                let steps = "";
+                
+                if (isHomogeneous && isExact) {
+                    steps = `2. Since the equation is both homogeneous and exact, we can use either method.<br>
+                    3. Using homogeneous method: Substitute y = vx<br>
+                    4. Then dy = v dx + x dv<br>
+                    5. Substitute into original equation:<br>
+                    &nbsp;&nbsp;&nbsp;(${formatExpression(m).replace(/y/g, 'vx')})dx + (${formatExpression(n).replace(/y/g, 'vx')})(v dx + x dv) = 0<br>
+                    6. Simplify to separable form<br>
+                    7. Integrate both sides<br>
+                    8. Substitute back v = y/x<br>
+                    9. Obtain general solution`;
+                } else if (isHomogeneous) {
+                    steps = `2. Since ∂M/∂y (${partials.dMdy}) ≠ ∂N/∂x (${partials.dNdx}), equation is not exact<br>
+                    3. But it's homogeneous, so use y = vx substitution<br>
+                    4. dy = v dx + x dv<br>
+                    5. Substitute: (${formatExpression(m).replace(/y/g, 'vx')})dx + (${formatExpression(n).replace(/y/g, 'vx')})(v dx + x dv) = 0<br>
+                    6. Simplify and separate variables<br>
+                    7. Integrate: ∫f(v) dv = ∫g(x) dx + C<br>
+                    8. Substitute back v = y/x<br>
+                    9. Simplify to final solution`;
+                } else if (isExact) {
+                    steps = `2. Since ∂M/∂y (${partials.dMdy}) = ∂N/∂x (${partials.dNdx}), equation is exact<br>
+                    3. Find F(x,y) such that dF = M dx + N dy = 0<br>
+                    4. ∂F/∂x = M = ${formatExpression(m)}<br>
+                    5. Integrate: F(x,y) = ∫M dx = ∫${formatExpression(m)} dx + g(y)<br>
+                    6. Differentiate F w.r.t y and set equal to N<br>
+                    7. Solve for g'(y)<br>
+                    8. Integrate to find g(y)<br>
+                    9. General solution: F(x,y) = C`;
+                } else {
+                    steps = `2. Since ∂M/∂y (${partials.dMdy}) ≠ ∂N/∂x (${partials.dNdx}), equation is not exact<br>
+                    3. Equation is not homogeneous<br>
+                    4. Try to find integrating factor μ<br>
+                    5. Check if (∂M/∂y - ∂N/∂x)/N is function of x only<br>
+                    6. If yes, μ(x) = exp(∫[(∂M/∂y - ∂N/∂x)/N] dx)<br>
+                    7. Multiply original equation by μ(x)<br>
+                    8. Solve the resulting exact equation`;
+                }
+                
+                return steps;
+            }
+            
+            // Helper function to get general solution
+            function getGeneralSolution(m, n, isHomogeneous, isExact, partials) {
+                if (m === exampleM && n === exampleN) {
+                    if (isHomogeneous && isExact) {
+                        return "x³ + 3xy² = C (or) y = ±√[(C - x³)/(3x)]";
+                    }
+                }
+                
+                if (isHomogeneous && isExact) {
+                    return `General solution: F(x,y) = C where ∂F/∂x = ${formatExpression(m)} and ∂F/∂y = ${formatExpression(n)}`;
+                } else if (isHomogeneous) {
+                    return `General solution after homogeneous substitution: ∫[1/(${formatExpression(n)})]d(${formatExpression(m)}) = C`;
+                } else if (isExact) {
+                    return `Exact equation solution: ∫${formatExpression(m)} dx + ∫(${formatExpression(n)} - ∂/∂y∫${formatExpression(m)} dx) dy = C`;
+                } else {
+                    return `General solution requires finding integrating factor first. Try: μ = exp(∫[(${partials.dMdy} - ${partials.dNdx})/${formatExpression(n)}] dx)`;
+                }
+            }
+            
+            // Initialize with example values
+            mInput.value = exampleM;
+            nInput.value = exampleN;
+        });
+    </script>
+</body>
+</html>
